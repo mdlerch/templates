@@ -1,0 +1,79 @@
+% gSCSguide.tex
+% v3.3 released January 2014
+
+\documentclass[]{gSCS2e-draft}
+
+
+\usepackage{subfigure}% Support for small, `sub' figures and tables
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\usepackage{setspace}
+\setstretch{1.8}
+
+$if(header-includes)$
+$for(header-includes)$
+$header-includes$
+$endfor$
+$endif$
+
+\usepackage{url}
+
+$if(spacing)$
+\usepackage{setspace}
+\setstretch{$spacing$}
+$endif$
+
+$if(title)$
+\title{$title$}
+$endif$
+
+$if(author)$
+    \author{
+    $for(author)$
+    $author.name$\(^{\rm $author.sym$}\)$if(author.corresponding)$\(^{\ast}\)
+        \thanks{ADD ASTERISK HERE Corresponding author. Email: $author.email$}
+    $endif$ $sep$ $endfor$
+    $if(institution)$
+        \\\vspace{6pt}
+        $for(institution)$
+            \(^{\rm $institution.sym$}\){\em $institution.name$}
+        $endfor$
+    $endif$
+    }
+$endif$
+
+\begin{document}
+
+$if(title)$
+\maketitle
+$endif$
+
+$if(abstract)$
+\begin{abstract}
+$abstract$
+$if(keywords)$
+\begin{keywords}$keywords$\end{keywords}
+$endif$
+\end{abstract}
+$endif$
+
+$body$
+
+$if(bibliography)$
+\bibliographystyle{gSCS}
+\bibliography{$bibliography$}
+$endif$
+
+\end{document}
