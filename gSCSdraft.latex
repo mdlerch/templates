@@ -3,7 +3,6 @@
 
 \documentclass[]{gSCS2e-draft}
 
-
 \usepackage{subfigure}% Support for small, `sub' figures and tables
 
 \theoremstyle{plain}
@@ -19,8 +18,11 @@
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem{example}[theorem]{Example}
 
+% My additions for draft
 \usepackage{setspace}
 \setstretch{1.8}
+
+
 
 $if(header-includes)$
 $for(header-includes)$
