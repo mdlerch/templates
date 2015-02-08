@@ -1,10 +1,12 @@
 % cscrs theme
 
 $if(fontsize)$
-\documentclass[$fontsize$, titlepage, twoside]{cscrs}
+\documentclass[$fontsize$, titlepage, twoside]{article}
 $else$
-\documentclass[12pt, titlepage, twoside]{cscrs}
+\documentclass[12pt, titlepage, twoside]{article}
 $endif$
+
+\usepackage{cscrs}
 
 $if(header-includes)$
 $for(header-includes)$
@@ -26,6 +28,13 @@ $if(author)$
     $for(author)$
     $author.name$\\$endfor$
     }
+$endif$
+
+$if(client)$
+    \def\client{$client$}
+$endif$
+$if(director)$
+    \def\director{$director$}
 $endif$
 
 \date{\today}
