@@ -1,0 +1,55 @@
+% cscrs theme
+
+$if(fontsize)$
+\documentclass[$fontsize$, titlepage, twoside]{cscrs}
+$else$
+\documentclass[12pt, titlepage, twoside]{cscrs}
+$endif$
+
+$if(header-includes)$
+$for(header-includes)$
+$header-includes$
+$endfor$
+$endif$
+
+$if(spacing)$
+\usepackage{setspace}
+\setstretch{$spacing$}
+$endif$
+
+$if(title)$
+\title{$title$}
+$endif$
+
+$if(author)$
+    \author{
+    $for(author)$
+    $author.name$\\$endfor$
+    }
+$endif$
+
+\date{\today}
+
+\begin{document}
+
+$if(title)$
+\maketitle
+$endif$
+
+$if(abstract)$
+\begin{abstract}
+$abstract$
+$if(keywords)$
+\begin{keywords}$keywords$\end{keywords}
+$endif$
+\end{abstract}
+$endif$
+
+$body$
+
+$if(bibliography)$
+\bibliographystyle{natbib}
+\bibliography{$bibliography$}
+$endif$
+
+\end{document}
