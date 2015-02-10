@@ -24,7 +24,6 @@ $endif$
 
 $if(spacing)$
 \usepackage{setspace}
-\setstretch{$spacing$}
 $endif$
 
 $if(title)$
@@ -51,6 +50,10 @@ $endif$
 
 $if(title)$
 \maketitle
+$endif$
+
+$if(spacing)$
+\setstretch{$spacing$}
 $endif$
 
 $if(abstract)$
