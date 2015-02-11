@@ -22,6 +22,10 @@ $header-includes$
 $endfor$
 $endif$
 
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+
 $if(spacing)$
 \usepackage{setspace}
 $endif$
