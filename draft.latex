@@ -41,7 +41,7 @@ $endif$
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 % use microtype if available
 \IfFileExists{microtype.sty}{\usepackage{microtype}}{}
-% \usepackage[margin=1.0in]{geometry}
+\usepackage[margin=1.0in]{geometry}
 $if(natbib)$
 \usepackage{natbib}
 \bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
