@@ -1,11 +1,16 @@
-\documentclass[$if(fontsize)$$fontsize$$else$11pt,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
 $if(fontfamily)$
 \usepackage{$fontfamily$}
 $else$
 \usepackage{lmodern}
 $endif$
+$if(linestretch)$
+\usepackage{setspace}
+\setstretch{$linestretch$}
+$else$
 \usepackage{setspace}
 \setstretch{1.8}
+$endif$
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
 \usepackage{fixltx2e} % provides \textsubscript
@@ -36,21 +41,57 @@ $endif$
 $if(mathfont)$
     \setmathfont(Digits,Latin,Greek){$mathfont$}
 $endif$
+$if(CJKmainfont)$
+    \usepackage{xeCJK}
+    \setCJKmainfont[$CJKoptions$]{$CJKmainfont$}
+$endif$
 \fi
 % use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 % use microtype if available
-\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
-\usepackage[margin=1.0in]{geometry}
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+$if(geometry)$
+\usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
+$endif$
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \usepackage[unicode=true]{hyperref}
+\fi
+\usepackage[usenames,dvipsnames]{color}
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={$author-meta$},
+            pdftitle={$title-meta$},
+            colorlinks=true,
+            citecolor=$if(citecolor)$$citecolor$$else$blue$endif$,
+            urlcolor=$if(urlcolor)$$urlcolor$$else$blue$endif$,
+            linkcolor=$if(linkcolor)$$linkcolor$$else$magenta$endif$,
+            pdfborder={0 0 0}}
+\urlstyle{same}  % don't use monospace font for urls
+$if(lang)$
+\ifxetex
+  \usepackage{polyglossia}
+  \setmainlanguage{$mainlang$}
+  \setotherlanguages{$for(otherlang)$$otherlang$$sep$,$endfor$}
+\else
+  \usepackage[shorthands=off,$lang$]{babel}
+\fi
+$endif$
 $if(natbib)$
 \usepackage{natbib}
 \bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
 $endif$
 $if(biblatex)$
 \usepackage{biblatex}
-$if(biblio-files)$
-\bibliography{$biblio-files$}
-$endif$
+$for(bibliography)$
+\addbibresource{$bibliography$}
+$endfor$
 $endif$
 $if(listings)$
 \usepackage{listings}
@@ -63,12 +104,12 @@ $highlighting-macros$
 $endif$
 $if(verbatim-in-note)$
 \usepackage{fancyvrb}
+\VerbatimFootnotes
 $endif$
 $if(tables)$
 \usepackage{longtable,booktabs}
 $endif$
-
-\usepackage{graphicx}
+\usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -77,24 +118,6 @@ $endif$
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-
-\ifxetex
-  \usepackage[setpagesize=false, % page size defined by xetex
-              unicode=false, % unicode breaks when used with xetex
-              xetex]{hyperref}
-\else
-  \usepackage[unicode=true]{hyperref}
-\fi
-\hypersetup{breaklinks=true,
-            bookmarks=true,
-            pdfauthor={$author-meta$},
-            pdftitle={$title-meta$},
-            colorlinks=true,
-            citecolor=$if(citecolor)$$citecolor$$else$blue$endif$,
-            urlcolor=$if(urlcolor)$$urlcolor$$else$blue$endif$,
-            linkcolor=$if(linkcolor)$$linkcolor$$else$magenta$endif$,
-            pdfborder={0 0 0}}
-\urlstyle{same}  % don't use monospace font for urls
 $if(links-as-notes)$
 % Make links footnotes instead of hotlinks:
 \renewcommand{\href}[2]{#2\footnote{\url{#1}}}
@@ -107,6 +130,8 @@ $endif$
 \setlength{\parindent}{3pt}
 \setlength{\parskip}{6pt plus 2pt minus 1pt}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 $if(numbersections)$
 \setcounter{secnumdepth}{5}
 $else$
@@ -114,14 +139,6 @@ $else$
 $endif$
 $if(verbatim-in-note)$
 \VerbatimFootnotes % allows verbatim text in footnotes
-$endif$
-$if(lang)$
-\ifxetex
-  \usepackage{polyglossia}
-  \setmainlanguage{$mainlang$}
-\else
-  \usepackage[$lang$]{babel}
-\fi
 $endif$
 
 $if(title)$
@@ -134,6 +151,16 @@ $endif$
 $for(header-includes)$
 $header-includes$
 $endfor$
+
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
 
 \begin{document}
 $if(title)$
@@ -151,7 +178,7 @@ $include-before$
 $endfor$
 $if(toc)$
 {
-\hypersetup{linkcolor=black}
+\hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$black$endif$}
 \setcounter{tocdepth}{$toc-depth$}
 \tableofcontents
 }
@@ -165,7 +192,7 @@ $endif$
 $body$
 
 $if(natbib)$
-$if(biblio-files)$
+$if(bibliography)$
 $if(biblio-title)$
 $if(book-class)$
 \renewcommand\bibname{$biblio-title$}
@@ -173,7 +200,7 @@ $else$
 \renewcommand\refname{$biblio-title$}
 $endif$
 $endif$
-\bibliography{$biblio-files$}
+\bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
 
 $endif$
 $endif$
